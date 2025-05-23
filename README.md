@@ -1,2 +1,2 @@
 # HackathonHuita
-<h1>I hate niggers</h1>
+<h1>I love Kaney</h1>
