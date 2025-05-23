@@ -1,0 +1,6 @@
+pandas
+statsmodels
+scikit-learn
+prophet
+plotly
+dash
