@@ -188,22 +188,30 @@ def predict_and_plot(models, test_data, group_cols, regressors):
         forecast = model.predict(future)
 
         # Plotting logic (unchanged)
-        plt.figure(figsize=(15, 6))
+        plt.figure(figsize=(15, 6), facecolor='#242424')
         plt.plot(train_history['Date'], train_history['Quantity'], 
-                 label='Train Actual', color='blue', marker='o')
+                 label='Train Actual', color='#fefefe')
         plt.plot(group['Date'], group['Quantity'], 
-                 label='Test Actual', color='green', marker='x')
+                 label='Test Actual', color='yellow', alpha=0.5)
         plt.plot(forecast['ds'], forecast['yhat'], 
-                 label='Forecast', color='red', linestyle='--')
+                 label='Forecast', color='red', linestyle='-')
         plt.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'],
                          alpha=0.2, color='red')
-        plt.axvline(train_history['Date'].max(), color='gray', linestyle='--',
+        plt.axvline(train_history['Date'].max(), color='white', linestyle='--',
                      label='Train/Test Split')
-        plt.title(f'{model_key} - Forecast vs Actual')
-        plt.xlabel('Date')
-        plt.ylabel('Quantity')
-        plt.legend()
-        plt.grid(True)
+        ax = plt.gca()
+        ax.set_facecolor('#242424')
+        ax.tick_params(axis='x', colors='#fefefe')
+        ax.tick_params(axis='y', colors='#fefefe')
+        ax.spines['bottom'].set_color('#fefefe')
+        ax.spines['top'].set_color('#fefefe') 
+        ax.spines['right'].set_color('#fefefe')
+        ax.spines['left'].set_color('#fefefe')
+        plt.title(f'{model_key} - Forecast vs Actual', color='#fefefe')
+        plt.xlabel('Date', color='#fefefe') 
+        plt.ylabel('Quantity', color='#fefefe')
+        plt.legend(labelcolor='#fefefe', facecolor='#242424')
+        plt.grid(False)
         plt.show()
 
     # Cleanup dummy column if added
@@ -265,9 +273,9 @@ def main():
     #method3(df_aa, df_campaign)
     
     # Run all methods
-    method1(df_train, df_campaign)
+    #method1(df_train, df_campaign)
     method2(df_train, df_campaign)
-    method3(df_train, df_campaign)
+    #method3(df_train, df_campaign)
 
 if __name__ == "__main__":
     main()
