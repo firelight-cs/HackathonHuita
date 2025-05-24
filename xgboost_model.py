@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-import xgboost as xgb
+from repa.HackathonHuita.xgboost_model import XGBRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 def load_and_preprocess(sales_path, campaign_path, stock_path):
@@ -80,7 +80,7 @@ def split_train_test(df, test_size=0.2):
 def train_model(train_df, features, target='Quantity'):
     X_train = train_df[features]
     y_train = train_df[target]
-    model = xgb.XGBRegressor(objective='reg:squarederror')
+    model = XGBRegressor(objective='reg:squarederror')
     model.fit(X_train, y_train)
     return model
 
