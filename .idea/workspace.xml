@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="69a10260-f58a-49cc-bd63-93fd726a56e0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CorrelationAnalysis3.3.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LSTM.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analyza3.5.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analyza3.6.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketingCompany3.4.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketingTrend3.2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/statsDaysMonth3.1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.CorrelationAnalysis3.3.executor": "Run",
+    "Python.LSTM.executor": "Run",
+    "Python.analyza3.5.executor": "Run",
+    "Python.analyza3.6.executor": "Run",
+    "Python.marketingCompany3.4.executor": "Run",
+    "Python.marketingTrend3.2.executor": "Run",
+    "Python.marketingTrend3.4.executor": "Run",
+    "Python.statsDaysMonth3.1.executor": "Run",
+    "git-widget-placeholder": "sanya2",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/HackathonHuita$marketingTrend3_2.coverage" NAME="marketingTrend3.2 Coverage Results" MODIFIED="1748071322159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$LSTM.coverage" NAME="LSTM Coverage Results" MODIFIED="1748058246893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$predictionModel.coverage" NAME="predictionModel Coverage Results" MODIFIED="1748052709583" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$analyza3_6.coverage" NAME="analyza3.6 Coverage Results" MODIFIED="1748073049337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$marketingTrend3_4.coverage" NAME="marketingTrend3.4 Coverage Results" MODIFIED="1748060259935" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$foreal.coverage" NAME="foreal Coverage Results" MODIFIED="1748047433260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$statsDaysMonth3_1.coverage" NAME="statsDaysMonth3.1 Coverage Results" MODIFIED="1748071040381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$analyza3_5.coverage" NAME="analyza3.5 Coverage Results" MODIFIED="1748071934610" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$marketingCompany3_4.coverage" NAME="marketingCompany3.4 Coverage Results" MODIFIED="1748071680342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$DataProcess.coverage" NAME="DataProcess Coverage Results" MODIFIED="1748048388213" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$CorrelationAnalysis3_3.coverage" NAME="CorrelationAnalysis3.3 Coverage Results" MODIFIED="1748071586953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HackathonHuita$newdataloader.coverage" NAME="newdataloader Coverage Results" MODIFIED="1748055546604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

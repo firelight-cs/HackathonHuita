@@ -1,3 +1,8 @@
 # Created by venv; see https://docs.python.org/3/library/venv.html
 .venv
 data/
+
+clean_marketing.csv
+clean_sales.csv
+clean_stock.csv
+clean_products.csv
