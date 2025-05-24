@@ -33,9 +33,9 @@ Analýza a modelování byly prováděny v jazyce Python za použití těchto kn
 
 Vyzkoušeli jsme různé přístupy k predikci prodejů:
 
-- **Prophet**
-- **XGBoost**
-- **RandomForest Regressor**
+- **Prophet** – model pro predikci časových řad vyvinutý společností Meta. Je navržený tak, aby zvládal sezónní a trendové změny a zároveň byl snadno použitelný i bez hlubokých znalostí statistiky.
+- **XGBoost** – výkonný algoritmus založený na principu gradientního boostingu. Je velmi efektivní při práci s tabulkovými daty a dosahuje špičkových výsledků v predikčních úlohách.
+- **RandomForest Regressor** – model založený na souboru rozhodovacích stromů, který kombinuje více stromů k dosažení stabilní a přesné predikce. Je robustní vůči šumu v datech a přetrénování.
 
 Výsledky byly porovnávány s reálnými hodnotami pomocí grafů.
 
