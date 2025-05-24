@@ -1,105 +1,167 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from statsmodels.tsa.statespace.sarimax import SARIMAX
+from pmdarima import auto_arima
+from joblib import Parallel, delayed
+import warnings
 
-def preprocess_main_data(main_df):
-    main_df['Date'] = pd.to_datetime(main_df['Date'])
-    main_df['YearMonth'] = main_df['Date'].dt.to_period('M').dt.to_timestamp()
-    product_status = main_df.drop_duplicates('Product')[['Product', 'ProductStatus']].set_index('Product')
-    country_status = main_df.drop_duplicates('Country')[['Country', 'CountryStatus']].set_index('Country')
-    return main_df, product_status, country_status
+warnings.filterwarnings("ignore")
 
-def preprocess_campaign_data(campaign_df, product_status, country_status):
-    campaign_df['ValidFrom'] = pd.to_datetime(campaign_df['ValidFrom'])
-    campaign_df['ValidTo'] = pd.to_datetime(campaign_df['ValidTo'])
-    campaign_df['Date'] = campaign_df.apply(
-        lambda x: pd.date_range(x['ValidFrom'], x['ValidTo'], freq='D'), axis=1)
-    campaign_df = campaign_df.explode('Date')
-    campaign_df = campaign_df.merge(product_status, on='Product', how='left')
-    campaign_df = campaign_df.merge(country_status, on='Country', how='left')
-    campaign_df['StatusGroup'] = campaign_df['ProductStatus'] + campaign_df['CountryStatus']
-    return campaign_df
+# ================== OPTIMIZED PREPROCESSING ==================
+def preprocess_data(sales_df, campaigns_df):
+    # Convert campaign dates to binary flags
+    campaigns_df['ValidFrom'] = pd.to_datetime(campaigns_df['ValidFrom'])
+    campaigns_df['ValidTo'] = pd.to_datetime(campaigns_df['ValidTo'])
+    
+    # Create date range covering all possible dates
+    min_date = sales_df['Date'].min().floor('D')
+    max_date = sales_df['Date'].max().ceil('D')
+    full_date_range = pd.date_range(min_date, max_date, freq='D', name='Date')
+    
+    # Create all product-country-date combinations
+    pc_combinations = sales_df[['Product', 'Country']].drop_duplicates()
+    full_index = pd.MultiIndex.from_product(
+        [pc_combinations['Product'], 
+         pc_combinations['Country'],
+         full_date_range],
+        names=['Product', 'Country', 'Date']
+    )
+    
+    # Merge with campaigns
+    campaigns_flags = campaigns_df.assign(
+        Date=lambda x: x.apply(
+            lambda r: pd.date_range(r['ValidFrom'], r['ValidTo'], freq='D'),
+            axis=1
+        )
+    ).explode('Date').drop_duplicates()
+    campaigns_flags['CampaignActive'] = 1
+    
+    merged_df = (
+        pd.DataFrame(index=full_index)
+        .reset_index()
+        .merge(campaigns_flags,
+               on=['Product', 'Country', 'Date'],
+               how='left')
+        .fillna({'CampaignActive': 0})
+    )
+    
+    # Merge with sales data
+    sales_agg = sales_df.groupby(['Product', 'Country', 'Date'])['Quantity'].sum().reset_index()
+    final_df = merged_df.merge(sales_agg, on=['Product', 'Country', 'Date'], how='left')
+    
+    # Add status information
+    status_map = sales_df[['Product', 'Country', 'ProductStatus', 'CountryStatus']].drop_duplicates()
+    final_df = final_df.merge(status_map, on=['Product', 'Country'], how='left')
+    
+    # Weekly aggregation
+    final_df['Week'] = final_df['Date'].dt.to_period('W').dt.start_time
+    weekly_df = final_df.groupby(['Product', 'Country', 'Week']).agg(
+        Quantity=('Quantity', 'sum'),
+        CampaignActive=('CampaignActive', 'max'),
+        ProductStatus=('ProductStatus', 'first'),
+        CountryStatus=('CountryStatus', 'first')
+    ).reset_index()
+    
+    return weekly_df
 
-def create_monthly_regressor(campaign_daily, group_cols):
-    campaign_daily['YearMonth'] = campaign_daily['Date'].dt.to_period('M').dt.to_timestamp()
-    regressor_monthly = campaign_daily.groupby(group_cols + ['YearMonth']).size().reset_index(name='CampaignCount')
-    return regressor_monthly
+# ================== OPTIMIZED MODELING ==================
+def safe_auto_arima(train_data, exog_data):
+    """Constrain auto_arima to prevent invalid configurations"""
+    try:
+        return auto_arima(
+            train_data,
+            exogenous=exog_data,
+            seasonal=True,
+            m=4,  # Monthly seasonality instead of yearly
+            suppress_warnings=True,
+            stepwise=True,
+            error_action='ignore',
+            max_order=6,  # Prevent over-complex models
+            trace=False
+        )
+    except:
+        return None
 
-def split_train_test(ts, regressor, test_size=0.2):
-    split_idx = int(len(ts) * (1 - test_size))
-    train = ts.iloc[:split_idx]
-    test = ts.iloc[split_idx:]
-    train_reg = regressor.iloc[:split_idx]
-    test_reg = regressor.iloc[split_idx:]
-    return train, test, train_reg, test_reg
+def forecast_group(group_data, group_name, model_type):
+    if len(group_data) < 52:  # Minimum 1 year of weekly data
+        return None
+    
+    # Split data preserving temporal order
+    train_size = int(len(group_data) * 0.8)
+    train = group_data.iloc[:train_size]
+    test = group_data.iloc[train_size:]
+    
+    if len(test) == 0:
+        return None
+    
+    # Prepare data
+    y_train = train['Quantity']
+    exog_train = train[['CampaignActive']]
+    exog_test = test[['CampaignActive']]
+    
+    # Model training with fallback
+    model = safe_auto_arima(y_train, exog_train)
+    if model is None:
+        return None
+    
+    # Forecasting
+    try:
+        forecast = model.predict(n_periods=len(test), exogenous=exog_test)
+    except:
+        return None
+    
+    # Create plot
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(train['Week'], y_train, label='Train')
+    ax.plot(test['Week'], test['Quantity'], label='Test')
+    ax.plot(test['Week'], forecast, label='Forecast')
+    ax.set_title(f"{model_type} - {group_name}")
+    ax.legend()
+    plt.close()  # Close plot to prevent display in notebooks
+    
+    return fig
 
-def fit_sarima(train, exog_train, order=(1,0,0), seasonal_order=(1,0,0,12)):
-    model = SARIMAX(train, exog=exog_train, order=order, seasonal_order=seasonal_order)
-    return model.fit(disp=False)
+# ================== PARALLEL PROCESSING METHODS ==================
+def method1(sales_weekly):
+    groups = sales_weekly.groupby('Country')
+    results = Parallel(n_jobs=-1)(
+        delayed(forecast_group)(group, name, "Method1") 
+        for name, group in groups
+    )
+    _ = [plt.show(fig) for fig in results if fig is not None]
 
-def forecast(model_results, steps, exog_test):
-    return model_results.get_forecast(steps=steps, exog=exog_test)
+def method2(sales_weekly):
+    global_group = sales_weekly.groupby('Week').agg(
+        Quantity=('Quantity', 'sum'),
+        CampaignActive=('CampaignActive', 'max')
+    ).reset_index()
+    fig = forecast_group(global_group, "Global", "Method2")
+    if fig:
+        plt.show(fig)
 
-def plot_results(train, test, forecast, title):
-    plt.figure(figsize=(12,6))
-    plt.plot(train.index, train, label='Train')
-    plt.plot(test.index, test, label='Test')
-    forecast_index = forecast.predicted_mean.index
-    plt.plot(forecast_index, forecast.predicted_mean, label='Forecast')
-    plt.title(title)
-    plt.legend()
-    plt.show()
+def method3(sales_weekly):
+    groups = sales_weekly.groupby(['ProductStatus', 'CountryStatus'])
+    results = Parallel(n_jobs=-1)(
+        delayed(forecast_group)(group, f"{ps}{cs}", "Method3") 
+        for (ps, cs), group in groups
+    )
+    _ = [plt.show(fig) for fig in results if fig is not None]
 
-def method1(main_df, campaign_df):
-    main_agg = main_df.groupby(['Country', 'YearMonth'])['Quantity'].sum().reset_index()
-    campaign_daily = campaign_df.groupby(['Country', 'Date']).size().reset_index(name='CampaignCount')
-    campaign_monthly = create_monthly_regressor(campaign_daily, ['Country'])
-    for country in main_agg['Country'].unique():
-        country_data = main_agg[main_agg['Country'] == country].set_index('YearMonth')['Quantity']
-        country_reg = campaign_monthly[campaign_monthly['Country'] == country].set_index('YearMonth')['CampaignCount']
-        full_idx = pd.date_range(country_data.index.min(), country_data.index.max(), freq='MS')
-        country_data = country_data.reindex(full_idx).fillna(0)
-        country_reg = country_reg.reindex(full_idx).fillna(0)
-        train, test, train_reg, test_reg = split_train_test(country_data, country_reg)
-        model = fit_sarima(train, train_reg)
-        forecast_result = forecast(model, len(test), test_reg)
-        plot_results(train, test, forecast_result, f'Method 1 - {country}')
 
-def method2(main_df, campaign_df):
-    main_agg = main_df.groupby('YearMonth')['Quantity'].sum()
-    campaign_daily = campaign_df.groupby('Date').size().reset_index(name='CampaignCount')
-    campaign_monthly = create_monthly_regressor(campaign_daily, [])
-    full_idx = pd.date_range(main_agg.index.min(), main_agg.index.max(), freq='MS')
-    main_ts = main_agg.reindex(full_idx).fillna(0)
-    reg_ts = campaign_monthly.set_index('YearMonth')['CampaignCount'].reindex(full_idx).fillna(0)
-    train, test, train_reg, test_reg = split_train_test(main_ts, reg_ts)
-    model = fit_sarima(train, train_reg)
-    forecast_result = forecast(model, len(test), test_reg)
-    plot_results(train, test, forecast_result, 'Method 2 - All Products and Countries')
-
-def method3(main_df, campaign_df):
-    main_df['StatusGroup'] = main_df['ProductStatus'] + main_df['CountryStatus']
-    main_agg = main_df.groupby(['StatusGroup', 'YearMonth'])['Quantity'].sum().reset_index()
-    campaign_daily = campaign_df.groupby(['StatusGroup', 'Date']).size().reset_index(name='CampaignCount')
-    campaign_monthly = create_monthly_regressor(campaign_daily, ['StatusGroup'])
-    for group in main_agg['StatusGroup'].unique():
-        group_data = main_agg[main_agg['StatusGroup'] == group].set_index('YearMonth')['Quantity']
-        group_reg = campaign_monthly[campaign_monthly['StatusGroup'] == group].set_index('YearMonth')['CampaignCount']
-        full_idx = pd.date_range(group_data.index.min(), group_data.index.max(), freq='MS')
-        group_data = group_data.reindex(full_idx).fillna(0)
-        group_reg = group_reg.reindex(full_idx).fillna(0)
-        if len(group_data) < 2: continue
-        train, test, train_reg, test_reg = split_train_test(group_data, group_reg)
-        model = fit_sarima(train, train_reg)
-        forecast_result = forecast(model, len(test), test_reg)
-        plot_results(train, test, forecast_result, f'Method 3 - {group}')
-
-# Example usage:
 sales_df = pd.read_csv('./data/sell_data_cleaned.csv', sep=';', parse_dates=['Date'])
-campaigns_df = pd.read_csv('./data/marketing_campaign.csv', sep=';', parse_dates=['ValidFrom', 'ValidTo'])
-main_df, product_status, country_status = preprocess_main_data(sales_df)
-campaign_df = preprocess_campaign_data(campaigns_df, product_status, country_status)
-# method1(main_df, campaign_df)
-# method2(main_df, campaign_df)
-method3(main_df, campaign_df)
+campaigns_df = pd.read_csv('./data/marketing_campaign.csv', sep=';', 
+                         parse_dates=['ValidFrom', 'ValidTo'])
+
+# Preprocess
+print("Preprocessing data...")
+sales_weekly = preprocess_data(sales_df, campaigns_df)
+
+# Execute methods
+print("Running Method1...")
+method1(sales_weekly)
+
+# print("Running Method2...")
+# method2(sales_weekly)
+
+# print("Running Method3...")
+# method3(sales_weekly)
