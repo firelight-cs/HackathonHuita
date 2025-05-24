@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from repa.HackathonHuita.xgboost_model import XGBRegressor
+from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 def load_and_preprocess(sales_path, campaign_path, stock_path):
@@ -142,12 +142,23 @@ def plot_method3(train_df, test_df, cutoff_date):
         test_agg = aggregated[aggregated['Date'] > cutoff_date]
         
         plt.figure(figsize=(12, 6))
-        plt.plot(train_agg['Date'], train_agg['Quantity'], label='Train Actual')
+        plt.plot(train_agg['Date'], train_agg['Quantity'], label='Train Actual', color='#fefefe', linestyle='-')
         plt.plot(test_agg['Date'], test_agg['Quantity'], label='Test Actual', linestyle='-', color='yellow', alpha=0.5)
         plt.plot(test_agg['Date'], test_agg['Predicted'], label='Predicted', linestyle='-', color='red')
+        ax = plt.gca()
+        ax.set_facecolor('#242424')
+        ax.tick_params(axis='x', colors='#fefefe')
+        ax.tick_params(axis='y', colors='#fefefe')
+        ax.spines['bottom'].set_color('#fefefe')
+        ax.spines['top'].set_color('#fefefe') 
+        ax.spines['right'].set_color('#fefefe')
+        ax.spines['left'].set_color('#fefefe')
+        plt.xlabel('Date', color='#fefefe') 
+        plt.ylabel('Quantity', color='#fefefe')
+        plt.legend(labelcolor='#fefefe', facecolor='#242424')
+        plt.grid(False)
+        plt.show()
         plt.title(f'Method 3: Status {status}')
-        plt.xlabel('Date')
-        plt.ylabel('Quantity')
         plt.legend()
         plt.show()
 
