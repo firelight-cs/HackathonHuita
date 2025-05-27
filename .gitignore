@@ -1,6 +1,6 @@
 # Created by venv; see https://docs.python.org/3/library/venv.html
 myenv/
-models/__pycache__
+models/__
 .ipynb_checkpoints/
 __pycache__/
 .venv
