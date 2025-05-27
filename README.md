@@ -7,6 +7,7 @@ A Python-based project developed during a hackathon. This project utilizes Jupyt
 
 ```
 Hackathon2025/
+├── data/                                # [MUST BE CREATED MANUALLY] Contains large dataset files (not included in repo)
 ├── models/                               # Python scripts for modular ML models           
 │   ├── prophet.py                        # Time series model using Facebook's Prophet
 │   ├── randomforestmodel.py              # Random Forest model logic
@@ -18,6 +19,10 @@ Hackathon2025/
 ├── requirements.txt              # List of Python dependencies (e.g., scikit-learn, xgboost)
 └── xgboost_model.ipynb           # Notebook using XGBoost for modeling and evaluation
 ```
+
+The **data/ folder is not included** in this repository due to:
+- Large file sizes (heavy-weighted datasets)
+- Potential sensitivity of raw data
 
 ## 🚀 Setup Instructions
 
