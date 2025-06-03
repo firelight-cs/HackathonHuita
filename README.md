@@ -7,7 +7,7 @@ A Python-based project developed during a hackathon. This project utilizes Jupyt
 
 ```
 Hackathon2025/
-├── data/                                # [MUST BE CREATED MANUALLY] Contains large dataset files (not included in repo)
+├── data/                                 # Contains large dataset files 
 ├── models/                               # Python scripts for modular ML models           
 │   ├── prophet.py                        # Time series model using Facebook's Prophet
 │   ├── randomforestmodel.py              # Random Forest model logic
@@ -20,9 +20,9 @@ Hackathon2025/
 └── xgboost_model.ipynb           # Notebook using XGBoost for modeling and evaluation
 ```
 
-The **data/ folder is not included** in this repository due to:
-- Large file sizes (heavy-weighted datasets)
-- Potential sensitivity of raw data
+The `data/` directory has only 1 dataset, which is essentially the cleaned version of sell_data.csv.
+    - other provided datasets like: `products.csv, stock.csv and marketing_campaign.csv` should be added by hands since they are heavy-weighted.
+    - Datasets are required for the logic to function correctly:
 
 ## 🚀 Setup Instructions
 
