@@ -7,22 +7,33 @@ A Python-based project developed during a hackathon. This project utilizes Jupyt
 
 ```
 Hackathon2025/
-├── data/                                 # Contains large dataset files 
-├── models/                               # Python scripts for modular ML models           
-│   ├── prophet.py                        # Time series model using Facebook's Prophet
-│   ├── randomforestmodel.py              # Random Forest model logic
-│   └── xgboost_model.py                  # XGBoost model script, good for structured data          
+├── data/                                 # Contains large dataset files     
+│    
+├── src/ # Source code and utility scripts
+│  ├── models/
+│  |  ├── prophet.py                    # Prophet model definition
+│  │  ├── randomforestmodel.py          # Random Forest model definition
+│  │  └── xgboost_model.py              # XGBoost model definition
+│  │
+│  └── utils/
+│      ├── load_and_preprocess.py        # Data loading, merging, and preprocessing functions
+│      └── plot.py                       # Visualization utilities
+|
+├──notebooks/
+|  ├── prophet.ipynb                    # Notebook exploring time series forecasting with Prophet
+|  ├── randomforestmodel.ipynb          # Jupyter notebook for Random Forest experimentation
+|  └── xgboost_model.ipynb              # Notebook using XGBoost for modeling and evaluation
+|
 ├── Casove rady a prediktivni modely.pdf  # Presentation
-├── prophet.ipynb                 # Notebook exploring time series forecasting with Prophet
-├── randomforestmodel.ipynb       # Jupyter notebook for Random Forest experimentation
-├── README.md                     # Project overview, setup instructions, and usage guide
-├── requirements.txt              # List of Python dependencies (e.g., scikit-learn, xgboost)
-└── xgboost_model.ipynb           # Notebook using XGBoost for modeling and evaluation
+|
+├── README.md                             # Project overview, setup instructions, and usage guide
+└── requirements.txt                      # List of Python dependencies (e.g., scikit-learn, xgboost)
+
 ```
 
 The `data/` directory has only 1 dataset, which is essentially the cleaned version of sell_data.csv.
     - other provided datasets like: `products.csv, stock.csv and marketing_campaign.csv` should be added by hands since they are heavy-weighted.
-    - Datasets are required for the logic to function correctly:
+    - Datasets are required for the logic to function correctly
 
 ## 🚀 Setup Instructions
 
