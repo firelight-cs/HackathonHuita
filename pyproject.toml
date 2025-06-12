@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hackatho2025"
+version = "0.1.0"
+description = "Forecasting project for Malfini Hackathon"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "scikit-learn",
+    "xgboost",
+    "prophet",
+    "matplotlib",
+    "numpy",
+    "ipykernel",
+    "notebook",
+]
+
+[tool.setuptools]
+packages = ["utils", "models"]
+package-dir = {"utils" = "src/utils", "models" = "src/models"}

@@ -8,3 +8,4 @@ data/marketing_campaign.csv
 data/products.csv
 data/sell_data.csv
 data/stock.csv
+*.egg-info/

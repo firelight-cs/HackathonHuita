@@ -35,6 +35,12 @@ The `data/` directory has only 1 dataset, which is essentially the cleaned versi
     - other provided datasets like: `products.csv, stock.csv and marketing_campaign.csv` should be added by hands since they are heavy-weighted.
     - Datasets are required for the logic to function correctly
 
+| Model         | RMSE  | MAE  |
+|---------------|-------|------|
+| XGBoost       | 26.12 | 7.00 |
+| Random Forest | 25.18 | 7.31 |
+| Prophet       | 25.17 | 6.84 |
+
 ## 🚀 Setup Instructions
 
 Follow these steps to get the project up and running on your local machine:
@@ -71,7 +77,7 @@ source .venv/bin/activate
 ### 4. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ### 5. Add the Virtual Environment to Jupyter
@@ -109,7 +115,6 @@ jupyter notebook
   * Restart Jupyter.
 
 ---
-
 
 # Časové řady a prediktivní modely
 
