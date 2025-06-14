@@ -17,6 +17,9 @@ dependencies = [
     "numpy",
     "ipykernel",
     "notebook",
+    "statsmodels",
+    "skforecast",
+    "lightgbm",
 ]
 
 [tool.setuptools]
